@@ -29,4 +29,4 @@ const studentSchema = new Schema(
     timestamps: true
   },
 );
-export const Student = model('Student', studentSchema);
+export const Student = model('Student', studentSchema, 'Students');
