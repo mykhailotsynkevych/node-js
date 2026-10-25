@@ -2,9 +2,14 @@ import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
 import 'dotenv/config';
+import { connectMongoDB } from './db/connectMongoDB.js';
+import { Student } from './models/student.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// підключення до MongoDB
+await connectMongoDB();
 
 app.use(express.json());// Middleware для парсингу JSON
 app.use(cors());// Дозволяє запити з будь-яких джерел
@@ -30,6 +35,15 @@ app.get("/", (req, res) => {
   res.status(200).json({ message: "Welcome to the API" });
 });
 
+// L2 MongoDB - create basic routes for students as an example
+
+app.get('/students', async (req, res) => {
+  const students = await Student.find();
+  res.status(200).json(students);
+});
+
+//L1 exress.js - create basic routes for notes as an example
+
 // Перший маршрут NOTES
 app.get('/notes', (req, res) => {
   res.status(200).json({ message: 'Retrieved all notes' });
@@ -40,6 +54,8 @@ app.get('/notes/:noteId', (req, res) => {
   const { id_param } = req.params;
   res.status(200).json({ message: `Retrieved note with ID: ${id_param}` });
 });
+
+//BASE SETTINGS
 
 // Маршрут для тестування middleware помилки
 app.get("/test-error", (req, res) => {
